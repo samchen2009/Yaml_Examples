@@ -1,0 +1,40 @@
+--- 
+config: 
+  env: 
+    product: ICS
+    platform: A3CE_SDK
+  build: 
+    pre_build_cmd: 
+    - pushd $JENKINS_WORKSPACE/icssdk
+    - . build/envsetup.sh
+    - lunch berlin_bg2_emmc-eng
+    - export ANDROID_LIBC=__BIONIC__
+    - make liblog libcurl libexif libxml2 libglib-2.0 libBDPBinder libiconv ping libcutils -j5
+    - popd
+    build_cmd: 
+    - make clean && make profile=Berlin_UnitTest
+    - if [ $? -ne 0 ]
+    - then
+    - exit -1
+    - fi
+    - pop
+    post_build_cmd: 
+    - pushd $JENKINS_WORKSPACE
+    - popd
+  output: 
+    app: 
+      items: 
+        item: "*"
+      src_dir: out/Berlin_UnitTest/Tests/bin
+      dst_dir: /data/tests
+  install: 
+    reboot_before_test: n
+    reboot_after_test: n
+    backup: n
+    restore: n
+    board_ip: 
+  test: 
+    test_all: y
+    round: "1"
+    tests: 
+      test: 

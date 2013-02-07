@@ -1,0 +1,3 @@
+default: &xxx
+  salary_per_month: 1000
+  pay_months: 12

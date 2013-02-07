@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<config>
+
+    <env>
+        <product>ICS</product>
+        <platform>A3CE_SDK</platform>
+    </env>
+
+    <build>
+        <pre_build_cmd>
+            <![CDATA[
+            pushd $JENKINS_WORKSPACE/icssdk
+            . build/envsetup.sh
+            lunch berlin_bg2_emmc-eng
+            export ANDROID_LIBC=__BIONIC__
+            make liblog libcurl libexif libxml2 libglib-2.0 libBDPBinder libiconv ping libcutils -j5
+            popd
+            ]]>
+        </pre_build_cmd>    
+
+        <build_cmd>
+            <![CDATA[
+            make clean && make profile=Berlin_UnitTest
+            if [ $? -ne 0 ] 
+            then
+            exit -1
+            fi    
+            pop
+            ]]>
+        </build_cmd>
+
+        <post_build_cmd>
+            <![CDATA[
+            pushd $JENKINS_WORKSPACE
+            popd
+            ]]>
+        </post_build_cmd>   
+    </build>
+
+    <output>
+        <app>
+            <items>
+                <item>*</item>
+            </items>
+            <src_dir>out/Berlin_UnitTest/Tests/bin</src_dir>
+            <dst_dir>/data/tests</dst_dir>
+        </app>
+    </output>
+
+    <install>
+        <!-- whether reboot system before test -->
+        <reboot_before_test>n</reboot_before_test>
+        <!-- whether reboot system after test -->
+        <reboot_after_test>n</reboot_after_test>
+        <backup>n</backup>
+        <restore>n</restore>
+
+        <!-- Will run test on this boards if specified, otherwise, will select one from DUT farm. -->
+        <board_ip></board_ip>
+    </install>
+
+    <test>
+        <!-- whether need to run all the tests -->
+        <test_all>y</test_all>
+        <round>1</round>
+        <tests>
+            <!-- define what apps should run in this cases -->
+            <test>
+                <name></name>
+                <!-- define the test parameters -->
+                <params>--gtest_output=xml:/sdcard/NAME.BUILD_NUM.xml</params>
+            </test>
+            <test>
+                <name></name>
+                <params></params>
+            </test>
+        </tests>
+    </test>
+</config>

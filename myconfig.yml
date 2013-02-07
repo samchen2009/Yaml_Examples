@@ -1,0 +1,11 @@
+<%= IO.read("default.yml") %>
+
+employee:
+  shan:
+    <<: *xxx
+    pay_months: 13
+  vj:
+    <<: *xxx
+    salary_per_month: 500
+    pay_months: 15
+
