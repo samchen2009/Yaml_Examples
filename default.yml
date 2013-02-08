@@ -1,3 +1,5 @@
 default: &xxx
   salary_per_month: 1000
   pay_months: 12
+  total: <%= context["salary_per_month"].to_i * context["pay_months"].to_i %>
+

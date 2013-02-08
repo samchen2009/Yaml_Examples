@@ -1,4 +1,4 @@
-<%= IO.read("default.yml") %>
+!include "default.yml"
 
 employee:
   shan:
